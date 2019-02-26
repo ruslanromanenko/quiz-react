@@ -13,7 +13,6 @@ class Quiz extends React.Component {
   handleChange = (evt) => {
      this.setState({answerUser: evt.target.value});
   };
-
   render() {
     return  <div>
     <span>{this.props.quiz.question}</span>
@@ -22,12 +21,15 @@ class Quiz extends React.Component {
       (this.props.stateButton) ?
 
         <div>
-          <span className="answer">{this.props.quiz.answer}</span>
-          <span className="answerUser">{this.state.answerUser}</span>
+          {
+          (this.state.answerUser === this.props.quiz.answer) ?
+          <span className="answer"> ваш ответ {this.state.answerUser}, правильно!</span> :
+          <span className="answerUser">ваш ответ {this.state.answerUser}, не правильно, правильный ответ {this.props.quiz.answer}</span>
+          }
         </div> :
-
         <Input type="text" onChange={this.handleChange}/>
     }
+    <br/>
     </div>
   }
 }
