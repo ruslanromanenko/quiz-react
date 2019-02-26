@@ -24,19 +24,6 @@ class App extends Component {
     this.setState({submitted: true});
   };
 
-  handleChangeInput = (evt, idQuiz) => {
-    let dataQuiz = this.state.dataQuiz;
-    dataQuiz.map(quiz => {
-      if(quiz.id === idQuiz) {
-        quiz.answerUser = evt.target.value;
-      }
-      return quiz;
-    });
-
-    this.setState(dataQuiz);
-  };
-
-
   render() {
     return (
       <div className="App">
@@ -46,7 +33,6 @@ class App extends Component {
               quiz={quiz}
               key={quiz.id}
               stateButton={this.state.submitted}
-              handleChange={this.handleChangeInput}
             />
           })
         }
