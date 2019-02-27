@@ -49,6 +49,7 @@ class App extends Component {
   };
 
   render() {
+    const hasButton = this.state.dataQuiz.every(quiz => quiz.answerUser);
     return (
       <div className="App">
         {
@@ -65,9 +66,9 @@ class App extends Component {
             />
           })
         }
-        <Button variant="contained" color="primary" onClick={this.handleClick}>
+        {hasButton && <Button className='button' variant="contained" color="primary" onClick={this.handleClick}>
           Сдать тест
-        </Button>
+        </Button>}
       </div>
     );
   }
