@@ -12,7 +12,6 @@ class Quiz extends React.Component {
   }
 
   componentDidMount(){
-
     if(this.inputRef.current && this.props.active){
       this.inputRef.current.focus();
     }
@@ -23,10 +22,6 @@ class Quiz extends React.Component {
     }
   }
 
-  handleChange = (evt) => {
-    this.setState({answerUser: evt.target.value});
-  };
-
   render() {
     return  <div>
     <span>{this.props.quiz.question}</span>
@@ -35,13 +30,13 @@ class Quiz extends React.Component {
       (this.props.stateButton) ?
         <React.Fragment>
           {
-          (this.state.answerUser === this.props.quiz.answer) ?
-            <span className="answer"> ваш ответ {this.state.answerUser}, правильно!</span> :
-            <span className="answerUser">ваш ответ {this.state.answerUser}, не правильно, правильный ответ {this.props.quiz.answer}</span>
+          (this.props.quiz.answerUser === this.props.quiz.answer) ?
+            <span className="answer"> ваш ответ {this.props.quiz.answerUser}, правильно!</span> :
+            <span className="answerUser">ваш ответ {this.props.quiz.answerUser}, не правильно, правильный ответ {this.props.quiz.answer}</span>
           }
         </React.Fragment>  :
         <React.Fragment>
-          <Input type="text" onChange={this.handleChange} onKeyDown={this.props.onKeyDown} inputRef={this.inputRef} onClick={(evt) => this.props.onClick(evt, this.props.index)}/>
+          <Input type="text" onChange={(evt) => this.props.onChange(evt, this.props.quiz.id)} onKeyDown={this.props.onKeyDown} inputRef={this.inputRef} onClick={(evt) => this.props.onClick(evt, this.props.index)}/>
         </React.Fragment>
     }
     <br/>

@@ -28,6 +28,10 @@ class App extends Component {
     this.setState({focusedQuizIndex:index});
   };
 
+  handleChange = (evt, idQuiz) => {
+    this.setState( dataQuiz.map(quiz => (idQuiz === quiz.id) ? quiz.answerUser = evt.target.value : quiz) );
+  };
+
   handleKeyDown = (evt) => {
     if(evt.key === 'ArrowUp'){
       this.setState( (prevState) => {
@@ -57,6 +61,7 @@ class App extends Component {
               active={this.state.focusedQuizIndex === index}
               onKeyDown={this.handleKeyDown}
               onClick={this.handleClickInput}
+              onChange={this.handleChange}
             />
           })
         }
