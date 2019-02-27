@@ -3,7 +3,6 @@ import './App.css';
 import Quiz from './Quiz/Quiz';
 import Button from '@material-ui/core/Button';
 
-
 const dataQuiz = [
   {id:1, question: 'Столица Украины?',answer: 'Киев'},
   {id:2, question: 'Столица России?',answer: 'Москва'},
@@ -16,7 +15,8 @@ class App extends Component {
     super(props);
     this.state = {
       dataQuiz: dataQuiz,
-      submitted: false
+      submitted: false,
+      focusedQuizIndex: 0
     }
   }
 
@@ -24,15 +24,39 @@ class App extends Component {
     this.setState({submitted: true});
   };
 
+  handleClickInput = (evt, index) => {
+    this.setState({focusedQuizIndex:index});
+  };
+
+  handleKeyDown = (evt) => {
+    if(evt.key === 'ArrowUp'){
+      this.setState( (prevState) => {
+        let index = (prevState.focusedQuizIndex - 1) % 4;
+        if(index < 0){
+          index = 3;
+        }
+        return {focusedQuizIndex: index}
+      });
+    }
+
+    if(evt.key === 'ArrowDown'){
+      this.setState( (prevState) => ({focusedQuizIndex: (prevState.focusedQuizIndex + 1) % 4}) );
+    }
+  };
+
   render() {
     return (
       <div className="App">
         {
-          this.state.dataQuiz.map(quiz => {
+          this.state.dataQuiz.map((quiz, index) => {
             return <Quiz
+              index={index}
               quiz={quiz}
               key={quiz.id}
               stateButton={this.state.submitted}
+              active={this.state.focusedQuizIndex === index}
+              onKeyDown={this.handleKeyDown}
+              onClick={this.handleClickInput}
             />
           })
         }
