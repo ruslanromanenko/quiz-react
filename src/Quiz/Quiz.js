@@ -12,12 +12,13 @@ class Quiz extends React.Component {
   }
 
   componentDidMount(){
-    if(this.props.active){
+
+    if(this.inputRef.current && this.props.active){
       this.inputRef.current.focus();
     }
   }
   componentDidUpdate(){
-    if(this.props.active){
+    if(this.props.active && this.inputRef.current){
       this.inputRef.current.focus();
     }
   }
@@ -35,11 +36,13 @@ class Quiz extends React.Component {
         <React.Fragment>
           {
           (this.state.answerUser === this.props.quiz.answer) ?
-          <span className="answer"> ваш ответ {this.state.answerUser}, правильно!</span> :
-          <span className="answerUser">ваш ответ {this.state.answerUser}, не правильно, правильный ответ {this.props.quiz.answer}</span>
+            <span className="answer"> ваш ответ {this.state.answerUser}, правильно!</span> :
+            <span className="answerUser">ваш ответ {this.state.answerUser}, не правильно, правильный ответ {this.props.quiz.answer}</span>
           }
-        </React.Fragment> :
-        <Input type="text" onChange={this.handleChange} onKeyDown={this.props.onKeyDown} inputRef={this.inputRef} onClick={(evt) => this.props.onClick(evt, this.props.index)}/>
+        </React.Fragment>  :
+        <React.Fragment>
+          <Input type="text" onChange={this.handleChange} onKeyDown={this.props.onKeyDown} inputRef={this.inputRef} onClick={(evt) => this.props.onClick(evt, this.props.index)}/>
+        </React.Fragment>
     }
     <br/>
     </div>
