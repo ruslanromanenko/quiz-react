@@ -1,6 +1,9 @@
-.answer{
+.rightAnswer{
     background: green;
+    padding: 15px;
+
 }
-.answerUser{
+.wrongAnswer{
     background: red;
+    padding: 15px;
 }

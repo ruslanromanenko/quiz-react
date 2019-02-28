@@ -4,10 +4,50 @@ import Quiz from './Quiz/Quiz';
 import Button from '@material-ui/core/Button';
 
 const dataQuiz = [
-  {id:1, question: 'Столица Украины?',answer: 'Киев'},
-  {id:2, question: 'Столица России?',answer: 'Москва'},
-  {id:3, question: 'Столица Белорусии?',answer: 'Минск'},
-  {id:4, question: 'Столица США?',answer: 'Вашингтон'}
+  {
+    id:'1',
+    question: 'Столица Украины?',
+    rightAnswerId: '1',
+    answers: [
+      {text: 'Киев', id: '1'},
+      {text: 'Москва', id: '2'},
+      {text: 'Минск', id: '3'},
+      {text: 'Вашингтон', id: '4'}
+    ]
+  },
+  {
+    id:'2',
+    question: 'Столица России?',
+    rightAnswerId: '2',
+    answers: [
+      {text: 'Киев', id: '1'},
+      {text: 'Москва', id: '2'},
+      {text: 'Минск', id: '3'},
+      {text: 'Вашингтон', id: '4'}
+    ]
+  },
+  {
+    id:'3',
+    question: 'Столица Белорусии?',
+    rightAnswerId: '3',
+    answers: [
+      {text: 'Киев', id: '1'},
+      {text: 'Москва', id: '2'},
+      {text: 'Минск', id: '3'},
+      {text: 'Вашингтон', id: '4'}
+    ]
+  },
+  {
+    id:'4',
+    question: 'Столица США?',
+    rightAnswerId: '4',
+    answers: [
+      {text: 'Киев', id: '1'},
+      {text: 'Москва', id: '2'},
+      {text: 'Минск', id: '3'},
+      {text: 'Вашингтон', id: '4'}
+    ]
+  }
 ];
 
 class App extends Component {
@@ -28,8 +68,12 @@ class App extends Component {
     this.setState({focusedQuizIndex:index});
   };
 
-  handleChange = (evt, idQuiz) => {
+  handleChangeInput = (evt, idQuiz) => {
     this.setState( dataQuiz.map(quiz => (idQuiz === quiz.id) ? quiz.answerUser = evt.target.value : quiz) );
+  };
+
+  handleChangeRadio = (evt) => {
+    this.setState( dataQuiz.map(quiz => (evt.target.name === quiz.id) ? (quiz.answerUser = evt.target.value, quiz.answerUserId = evt.target.id ) : quiz) );
   };
 
   handleKeyDown = (evt) => {
@@ -62,16 +106,16 @@ class App extends Component {
               active={this.state.focusedQuizIndex === index}
               onKeyDown={this.handleKeyDown}
               onClick={this.handleClickInput}
-              onChange={this.handleChange}
+              onChangeInput={this.handleChangeInput}
+              onChangeRadio={this.handleChangeRadio}
             />
           })
         }
-        {hasButton && <Button className='button' variant="contained" color="primary" onClick={this.handleClick}>
+        {hasButton && <Button style={{marginTop: '20px'}} variant="contained" color="primary" onClick={this.handleClick}>
           Сдать тест
         </Button>}
       </div>
     );
   }
 }
-
 export default App;

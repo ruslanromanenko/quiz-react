@@ -1,5 +1,6 @@
 import React from 'react';
-import Input from '@material-ui/core/Input';
+import AnswersList from './AnswersList/AnswersList';
+
 import './Quiz.css';
 
 class Quiz extends React.Component {
@@ -23,25 +24,27 @@ class Quiz extends React.Component {
   }
 
   render() {
-    return  <div>
-    <span>{this.props.quiz.question}</span>
+    return  <React.Fragment>
+    <h3>{this.props.quiz.question}</h3>
     <br/>
     {
       (this.props.stateButton) ?
         <React.Fragment>
           {
-          (this.props.quiz.answerUser === this.props.quiz.answer) ?
-            <span className="answer"> ваш ответ {this.props.quiz.answerUser}, правильно!</span> :
-            <span className="answerUser">ваш ответ {this.props.quiz.answerUser}, не правильно, правильный ответ {this.props.quiz.answer}</span>
+          ( this.props.quiz.rightAnswerId === this.props.quiz.answerUserId ) ?
+            <span className="rightAnswer">Ваш ответ {this.props.quiz.answerUser}, правильно!</span> :
+            <span className="wrongAnswer">Ваш ответ {this.props.quiz.answerUser}, не правильно, правильный ответ {this.props.quiz.answer}</span>
           }
         </React.Fragment>  :
         <React.Fragment>
-          <Input type="text" onChange={(evt) => this.props.onChange(evt, this.props.quiz.id)} onKeyDown={this.props.onKeyDown} inputRef={this.inputRef} onClick={(evt) => this.props.onClick(evt, this.props.index)}/>
+          <AnswersList
+            answers={this.props.quiz.answers}
+            idQuiz={this.props.quiz.id}
+            onChangeRadio={this.props.onChangeRadio}/>
         </React.Fragment>
     }
     <br/>
-    </div>
+    </React.Fragment>
   }
 }
-
 export default Quiz
