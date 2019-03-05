@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Quiz from './containers/Quiz/Quiz';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
+  ReactDOM.render(<Quiz />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

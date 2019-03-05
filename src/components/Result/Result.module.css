@@ -1,0 +1,18 @@
+.resultWrap{
+    display: flex;
+    flex-direction: column;
+}
+.successAnswer{
+    color: green;
+    padding: 15px;
+}
+.errorAnswer{
+    color: red;
+    padding: 15px;
+}
+
+.quizAnswerBlock{
+    background: rgba(170, 198, 213, 0.8);
+    margin: 15px;
+    padding: 15px;
+}

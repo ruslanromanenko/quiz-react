@@ -29,22 +29,28 @@ const styles = {
 
 const AnswersList = props => {
 const {classes} = props;
-
  return (
     <RadioGroup
       onChange={props.onChangeRadio}
       classes={{root: classes.radioGroup}}
-      name={props.idQuiz}
+      name={props.activeQuestion.id}
+      defaultValue={false}
     >
       {
-        props.answers.map( (answer, index) =>
+        props.activeQuestion.answers.map( (answer, index) => {
+          return(
           <FormControlLabel
             key={index}
             value={answer.text}
-            control={<Radio id={answer.id} classes={{root: classes.radio, checked: classes.checked}}/>}
+            control={
+              <Radio
+                id={answer.id}
+                classes={{root: classes.radio, checked: classes.checked}}
+                checked={answer.id === props.activeQuestion.answerUserId}
+              />}
             label={answer.text}
             classes={{label: classes.label}}
-          />
+          />)}
         )
       }
     </RadioGroup>
