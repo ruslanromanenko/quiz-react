@@ -8,6 +8,7 @@ const ButtonQuiz = props => {
     variant="contained"
     color="primary"
     onClick={props.onClick}
+    className={props.className}
   >
     {props.value}
   </Button>

@@ -33,11 +33,11 @@ const {classes} = props;
     <RadioGroup
       onChange={props.onChangeRadio}
       classes={{root: classes.radioGroup}}
-      name={props.activeQuestion.id}
+      name={props.indexActiveQuestion.id}
       defaultValue={false}
     >
       {
-        props.activeQuestion.answers.map( (answer, index) => {
+        props.indexActiveQuestion.answers.map( (answer, index) => {
           return(
           <FormControlLabel
             key={index}
@@ -46,7 +46,7 @@ const {classes} = props;
               <Radio
                 id={answer.id}
                 classes={{root: classes.radio, checked: classes.checked}}
-                checked={answer.id === props.activeQuestion.answerUserId}
+                checked={answer.id === props.indexActiveQuestion.idUserAnswer}
               />}
             label={answer.text}
             classes={{label: classes.label}}

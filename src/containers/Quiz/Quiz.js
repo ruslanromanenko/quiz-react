@@ -1,155 +1,96 @@
 import React, { Component } from 'react';
-import './Quiz.css';
+import classes from './Quiz.module.css';
 import ActiveQuiz from '../../components/ActiveQuiz/ActiveQuiz';
 import ButtonQuiz from '../../components/ButtonQuiz/ButtonQuiz';
 import Result from '../../components/Result/Result';
-import cloneDeep from 'lodash.clonedeep';
-
-const quiz = [
-  {
-    id:'1',
-    question: 'Столица Украины?',
-    rightAnswerId: '1',
-    answers: [
-      {text: 'Киев', id: '1'},
-      {text: 'Москва', id: '2'},
-      {text: 'Минск', id: '3'},
-      {text: 'Вашингтон', id: '4'}
-    ]
-  },
-  {
-    id:'2',
-    question: 'Столица России?',
-    rightAnswerId: '2',
-    answers: [
-      {text: 'Киев', id: '1'},
-      {text: 'Москва', id: '2'},
-      {text: 'Минск', id: '3'},
-      {text: 'Вашингтон', id: '4'}
-    ]
-  },
-  {
-    id:'3',
-    question: 'Столица Белорусии?',
-    rightAnswerId: '3',
-    answers: [
-      {text: 'Киев', id: '1'},
-      {text: 'Москва', id: '2'},
-      {text: 'Минск', id: '3'},
-      {text: 'Вашингтон', id: '4'}
-    ]
-  },
-  {
-    id:'4',
-    question: 'Столица США?',
-    rightAnswerId: '4',
-    answers: [
-      {text: 'Киев', id: '1'},
-      {text: 'Москва', id: '2'},
-      {text: 'Минск', id: '3'},
-      {text: 'Вашингтон', id: '4'}
-    ]
-  }
-];
+import {Link} from "react-router-dom";
+import {connect} from "react-redux";
 
 class Quiz extends Component {
 
   state = {
-    submitted: false,
-    finished: false,
-    activeQuestion: 0,
-    quiz: cloneDeep(quiz),
-  };
-
-  handleClick = () => {
-    this.setState({submitted: true});
+    indexActiveQuestion: 0
   };
 
   handleChangeRadio = (evt) => {
-    const activeQuestion = this.state.activeQuestion;
-
-    if(activeQuestion <= this.state.quiz.length){
-      const updateQuizState = this.state.quiz;
-      updateQuizState[activeQuestion].answerUser = evt.target.value;
-      updateQuizState[activeQuestion].answerUserId = evt.target.id;
-
-      if(activeQuestion < this.state.quiz.length){
-        this.setState({
-          quiz: updateQuizState,
-        });
-      }
-    }
+    this.props.answerOnQuestion({indexActiveQuestion: this.state.indexActiveQuestion, idUserAnswer: evt.target.id})
   };
 
   handleClickNextQuestion = () => {
-    const activeQuestionIndex = this.state.activeQuestion;
-    if(activeQuestionIndex < this.state.quiz.length -1 && this.state.quiz[activeQuestionIndex].answerUser){
+    const indexActiveQuestion = this.state.indexActiveQuestion;
+
+    if(indexActiveQuestion < this.props.quiz.length -1 && this.props.quiz[indexActiveQuestion].valueUserAnswer){
       this.setState({
-        activeQuestion: activeQuestionIndex + 1,
+        indexActiveQuestion: indexActiveQuestion + 1,
       });
     }
-    if(activeQuestionIndex + 1 === this.state.quiz.length){
-      this.setState( (prevState) => prevState.finished = true)
-    }
+
+    this.props.onFinishedQuiz(indexActiveQuestion + 1);
   };
 
   handleClickPreviousQuestion = () => {
-    const activeQuestion = this.state.activeQuestion;
-    if(activeQuestion > 0){
+    const indexActiveQuestion = this.state.indexActiveQuestion;
+    if(indexActiveQuestion > 0){
       this.setState({
-        activeQuestion: activeQuestion - 1,
+        indexActiveQuestion: indexActiveQuestion - 1,
       });
     }
   };
 
   handleClickReset = () => {
     this.setState({
-      activeQuestion: 0,
-      submitted: false,
-      finished: false,
-      quiz: cloneDeep(quiz),
+      indexActiveQuestion: 0
     });
-  };
-
-  renderActions = (finished) => {
-    return (
-      finished ?
-        <ButtonQuiz onClick={this.handleClick} value="Сдать тест"/> :
-        <React.Fragment>
-          <ButtonQuiz onClick={this.handleClickPreviousQuestion} value="Предыдущий вопрос"/>
-          <ButtonQuiz onClick={this.handleClickNextQuestion} value="Следующий вопрос"/>
-        </React.Fragment>
-    );
+    this.props.onResetQuiz();
   };
 
   renderQuiz = () => {
     return (
       <React.Fragment>
         <ActiveQuiz
-          activeQuestion={this.state.quiz[this.state.activeQuestion]}
-          stateButton={this.state.submitted}
+          indexActiveQuestion={this.props.quiz[this.state.indexActiveQuestion]}
+          stateButton={this.props.submitted}
           onChangeRadio={this.handleChangeRadio}
-          quizLength={this.state.quiz.length}
-          answerNumber={this.state.activeQuestion + 1}
+          quizLength={this.props.quiz.length}
+          answerNumber={this.state.indexActiveQuestion + 1}
         />
-        {this.renderActions(this.state.finished)}
+        <div>
+          <ButtonQuiz onClick={this.handleClickPreviousQuestion} value="Предыдущий вопрос"/>
+          <ButtonQuiz onClick={this.handleClickNextQuestion} value="Следующий вопрос"/>
+        </div>
       </React.Fragment>
     );
   };
 
   render() {
     return (
-      <div className="Quiz">
+      <div className={classes.Quiz}>
+        <h1>Quiz Radio</h1>
         {
-          this.state.submitted ?
-            <Result
-              quiz={this.state.quiz}
+          this.props.finished
+            ? <Result
+              quiz={this.props.quiz}
               onClickReset={this.handleClickReset}
-            /> :
-            this.renderQuiz()
+              />
+            : this.renderQuiz()
         }
+        <Link to='/'>
+          <ButtonQuiz value="Вернуться на главную" className={classes.BackToHome}/>
+        </Link>
       </div>
     );
   }
 }
-export default Quiz;
+
+function mapStateToProps(state) {
+  return state;
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    answerOnQuestion: (payload) =>  dispatch({ type: 'USER_ANSWER', payload}),
+    onFinishedQuiz: (indexActiveQuestion) => dispatch({type: 'QUIZ_FINISHED', indexActiveQuestion}),
+    onResetQuiz: () => dispatch({ type: 'QUIZ_RESET' })
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Quiz);
