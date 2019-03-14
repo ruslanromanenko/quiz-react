@@ -121,7 +121,7 @@ function checkValidServiceWorker(swUrl, config) {
     })
     .catch(() => {
       console.log(
-        'No internet connection found. Quiz is running in offline mode.'
+        'No internet connection found. QuizRadio is running in offline mode.'
       );
     });
 }

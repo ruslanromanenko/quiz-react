@@ -1,23 +1,24 @@
 import React from 'react';
 import classes from './Result.module.css';
-import ButtonQuiz from '../ButtonQuiz/ButtonQuiz';
+import ButtonQuiz from '../../../components/ButtonQuiz/ButtonQuiz';
+import {connect} from "react-redux";
 
 const Result = props => {
-  console.log(props)
   return (
     <div className={classes.resultWrap}>
     <h1>Результат</h1>
       {
         props.quiz.map( (item, index) => {
+          const userAnswer = item.answers.find( answer => answer.id === props.userAnswers[index].userAnswerId);
           return <div className={classes.quizAnswerBlock} key={index}>
           <h4> {item.question}</h4>
             {
-            (item.rightAnswerId === item.idUserAnswer)
+            (item.rightAnswerId === props.userAnswers[index].userAnswerId)
               ? <span className={classes.successAnswer} >
-                  Ваш ответ {item.valueUserAnswer}, правильно!
+                  Ваш ответ {userAnswer.value}, правильно!
                 </span>
               : <span className={classes.errorAnswer}>
-                  Ваш ответ {item.valueUserAnswer} - не правильно. Правильный ответ {item.answers[item.rightAnswerId-1].text}!
+                  Ваш ответ {userAnswer.value} - не правильно. Правильный ответ {item.answers[item.rightAnswerId-1].value}!
                 </span>
             }
           </div>
@@ -26,9 +27,13 @@ const Result = props => {
       <div>
         <ButtonQuiz
           value="Повторить"
-          onClick={props.onClickReset}
+          onClick={props.onClick}
         />
       </div>
     </div>
 )};
-export default Result
+
+function mapStateToProps(state) {
+  return state;
+}
+export default connect(mapStateToProps)(Result)

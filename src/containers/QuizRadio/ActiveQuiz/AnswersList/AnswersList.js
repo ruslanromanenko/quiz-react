@@ -3,6 +3,8 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
+import {connect} from "react-redux";
+
 
 const styles = {
   radioGroup: {
@@ -29,26 +31,29 @@ const styles = {
 
 const AnswersList = props => {
 const {classes} = props;
+
+ const userAnswer = props.userAnswers.find( answer => props.question.id === answer.questionId );
+
  return (
     <RadioGroup
       onChange={props.onChangeRadio}
       classes={{root: classes.radioGroup}}
-      name={props.indexActiveQuestion.id}
+      name={props.question.id}
       defaultValue={false}
     >
       {
-        props.indexActiveQuestion.answers.map( (answer, index) => {
+        props.question.answers.map( (answer, index) => {
           return(
           <FormControlLabel
             key={index}
-            value={answer.text}
+            value={answer.value}
             control={
               <Radio
                 id={answer.id}
                 classes={{root: classes.radio, checked: classes.checked}}
-                checked={answer.id === props.indexActiveQuestion.idUserAnswer}
+                checked={userAnswer ? answer.id === userAnswer.userAnswerId : false}
               />}
-            label={answer.text}
+            label={answer.value}
             classes={{label: classes.label}}
           />)}
         )
@@ -57,4 +62,8 @@ const {classes} = props;
   );
 };
 
-export default withStyles(styles)(AnswersList);
+function mapStateToProps(state) {
+  return state;
+}
+
+export default withStyles(styles)( connect(mapStateToProps)(AnswersList));

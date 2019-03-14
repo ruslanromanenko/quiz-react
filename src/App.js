@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import QuizCheckbox from './containers/QuizCheckbox/QuizCheckbox';
-import Quiz from './containers/Quiz/Quiz';
+import Quiz from './containers/QuizRadio/QuizRadio';
 import { Route, Switch } from "react-router-dom";
 import PrivateRoute from "./hoc/PrivateRoute/PrivateRoute";
 import Home from './containers/Home/Home';

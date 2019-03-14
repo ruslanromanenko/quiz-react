@@ -1,41 +1,39 @@
-import cloneDeep from "lodash.clonedeep";
-import * as dataQuiz from '../src/initialQuiz';
-const initialQuiz = dataQuiz.default;
 
 const initialState = {
   finished: false,
-  quiz: cloneDeep(initialQuiz)
+  userAnswers: [] // { questionId: null, userAnswerId: null }
 };
 
 export default function rootReducer(state = initialState, action) {
 
   switch (action.type) {
     case 'USER_ANSWER':
-      const quiz = state.quiz.map( ( question, index ) => {
-        if(action.payload.indexActiveQuestion === index){
-          const uzerAnswer = question.answers.find( (answer) => {
-            return answer.id === action.payload.idUserAnswer ? true : false
-          });
-          question.idUserAnswer = action.payload.idUserAnswer;
-          question.valueUserAnswer = uzerAnswer.text
+
+      const answer = state.userAnswers.find( (answer) => answer.questionId === action.payload.questionId);
+
+      if( answer === undefined ){
+        return {...state, userAnswers: [...state.userAnswers, action.payload] };
+      }
+      const answers = state.userAnswers.map( (answer)=> {
+        if(answer.questionId === action.payload.questionId && answer.userAnswerId !== action.payload.userAnswerId){
+          answer.userAnswerId = action.payload.userAnswerId;
         }
-        return question
+        return answer
       });
-      return Object.assign( {}, state, {quiz: quiz } );
+      return { ...state, userAnswers: answers };
 
     case 'QUIZ_FINISHED':
-      if(action.indexActiveQuestion === state.quiz.length){
-        return {
-          ...state, finished: true
-        }
+      if( action.payload.numberQuestion === action.payload.quizLength ){
+        return { ...state, finished: true }
       }
       return state;
 
     case 'QUIZ_RESET':
-    return {
-      finished: false,
-      quiz: cloneDeep(initialQuiz)
-    };
+      return {
+        finished: false,
+        userAnswers: []
+      };
+
     default:
       return state
   }

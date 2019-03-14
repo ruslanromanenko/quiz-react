@@ -8,13 +8,13 @@ const ActiveQuiz = props => {
       <p className='Question'>
       <span>
         <strong>{props.answerNumber}.</strong>&nbsp;
-        {props.indexActiveQuestion.question}
+        {props.question.question}
       </span>
       <small>{props.answerNumber} из {props.quizLength}</small>
       </p>
       <br/>
       <AnswersList
-        indexActiveQuestion={props.indexActiveQuestion}
+        question={props.question}
         onChangeRadio={props.onChangeRadio}
       />
     </React.Fragment>
