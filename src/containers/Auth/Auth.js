@@ -41,7 +41,7 @@ export default class Auth extends Component {
     };
     const url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyAt87ufttqHxU_x0xlP3pPKDkovmJngrdw';
 
-    var myInit = {
+    const myInit = {
       method: 'POST',
       body: JSON.stringify(authData)
     };

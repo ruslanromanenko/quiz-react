@@ -5,14 +5,87 @@ import ButtonQuiz from '../../components/ButtonQuiz/ButtonQuiz';
 import Result from './Result/Result';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
-import * as quizes from '../../quizes';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import ErrorDialog from '../../components/UI/Dialogs/ErrorDialog/ErrorDialog';
 
 class QuizRadio extends Component {
 
   state = {
     indexActiveQuestion: 0,
-    quiz: quizes.default
+    quiz: [],
+    loader: true,
+    dialog: false,
+    errorMessage: null
   };
+
+  async componentDidMount() {
+    // const url = 'https://quiz-react-8350c.firebaseio.com/Quiz.json';
+    //
+    // const data = JSON.stringify(quizes.default);
+    // const myInit = {
+    //   method: 'POST',
+    //   body: data,
+    //   headers: {'Content-Type': 'application/json'}
+    // };
+    // fetch(url, myInit)
+    //   .then((response) => {
+    //     if(response.status === 200){
+    //       response.json().then( (data)=> {
+    //       console.log(data.Question)
+    //     });
+    //
+    //     }else{
+    //       // this.changeLoadingState();
+    //     }
+    //   })
+    //   .catch(console.log)
+
+    // const url = `https://quiz-react-8350c.firebaseio.com/Quiz.json`;
+    // var myInit = {
+    //   method: 'GET',
+    // };
+    // fetch(url, myInit)
+    //   .then((response) => {
+    //     if(response.status === 200){
+    //       const quizes = [];
+    //       response.json().then( (data)=> {
+    //         Object.keys(data).forEach( (key, index) => {
+    //           quizes.push({
+    //             id: key,
+    //             name: `Тест №${index +1}`
+    //           });
+    //
+    //           this.setState({
+    //             quizes
+    //           });
+    //           console.log(this.state.quizes)
+    //         });
+    //       });
+    //     }else{
+    //       // this.changeLoadingState();
+    //     }
+    //   })
+    //   .catch(console.log);
+
+    const urlQuiz = `https://quiz-react-8350c.firebaseio.com/Quiz/-La-yaVQmAhD4gymzsRR.json`;
+    fetch(urlQuiz)
+      .then((response) => {
+        if(response.status === 200){
+          response.json().then( quizData => {
+            const quiz = quizData
+            this.setState({
+              quiz,
+              loader: false
+            });
+          })
+        }else{
+          this.setState({
+            loader: true
+          });
+        }
+      })
+      .catch(console.log)
+  }
 
   handleChangeRadio = (evt) => {
     this.props.answerOnQuestion({questionId: this.state.quiz[this.state.indexActiveQuestion].id, userAnswerId: evt.target.id})
@@ -25,7 +98,13 @@ class QuizRadio extends Component {
       this.setState({
         indexActiveQuestion: indexActiveQuestion + 1,
       });
+    }else{
+      this.setState({
+        errorMessage: 'Нужно выбрать вариант ответа',
+        dialog: true
+      });
     }
+
     if(this.props.userAnswers[indexActiveQuestion]){
       this.props.onFinishedQuiz({numberQuestion: indexActiveQuestion + 1, quizLength: this.state.quiz.length});
     }
@@ -45,6 +124,12 @@ class QuizRadio extends Component {
       indexActiveQuestion: 0,
     });
     this.props.onResetQuiz();
+  };
+
+  handleCloseDialog = () => {
+    this.setState({
+      dialog: false
+    })
   };
 
   renderQuiz = () => {
@@ -74,11 +159,21 @@ class QuizRadio extends Component {
               quiz={this.state.quiz}
               onClick={this.handleClickReset}
               />
-            : this.renderQuiz()
+            : this.state.loader ?  <CircularProgress className={classes.progress} /> :  this.renderQuiz()
         }
         <Link to='/'>
           <ButtonQuiz value="Вернуться на главную" className={classes.BackToHome} onClick={this.handleClickReset}/>
         </Link>
+
+        {
+          this.state.dialog
+            ? <ErrorDialog
+                onOpen={this.state.dialog}
+                onClose={this.handleCloseDialog}
+                errorMessage={this.state.errorMessage}
+              />
+            : null
+        }
       </div>
     );
   }
