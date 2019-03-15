@@ -1,69 +1,27 @@
 import React, { Component } from 'react';
-import './App.css';
-import Quiz from './Quiz/Quiz';
-import Button from '@material-ui/core/Button';
+import QuizCheckbox from './containers/QuizCheckbox/QuizCheckbox';
+import Quiz from './containers/QuizRadio/QuizRadio';
+import { Route, Switch } from "react-router-dom";
+import PrivateRoute from "./hoc/PrivateRoute/PrivateRoute";
+import Home from './containers/Home/Home';
+import Auth from './containers/Auth/Auth';
+import LogOut from "./containers/LogOut/LogOut";
 
-const dataQuiz = [
-  {id:1, question: 'Столица Украины?',answer: 'Киев'},
-  {id:2, question: 'Столица России?',answer: 'Москва'},
-  {id:3, question: 'Столица Белорусии?',answer: 'Минск'},
-  {id:4, question: 'Столица США?',answer: 'Вашингтон'}
-];
 
 class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      dataQuiz: dataQuiz,
-      submitted: false,
-      focusedQuizIndex: 0
-    }
-  }
-
-  handleClick = () => {
-    this.setState({submitted: true});
-  };
-
-  handleClickInput = (evt, index) => {
-    this.setState({focusedQuizIndex:index});
-  };
-
-  handleKeyDown = (evt) => {
-    if(evt.key === 'ArrowUp'){
-      this.setState( (prevState) => {
-        let index = (prevState.focusedQuizIndex - 1) % 4;
-        if(index < 0){
-          index = 3;
-        }
-        return {focusedQuizIndex: index}
-      });
-    }
-
-    if(evt.key === 'ArrowDown'){
-      this.setState( (prevState) => ({focusedQuizIndex: (prevState.focusedQuizIndex + 1) % 4}) );
-    }
-  };
-
   render() {
     return (
-      <div className="App">
-        {
-          this.state.dataQuiz.map((quiz, index) => {
-            return <Quiz
-              index={index}
-              quiz={quiz}
-              key={quiz.id}
-              stateButton={this.state.submitted}
-              active={this.state.focusedQuizIndex === index}
-              onKeyDown={this.handleKeyDown}
-              onClick={this.handleClickInput}
-            />
-          })
-        }
-        <Button variant="contained" color="primary" onClick={this.handleClick}>
-          Сдать тест
-        </Button>
-      </div>
+      <Switch>
+        <Route path="/" component={ Home } exact/>
+        <PrivateRoute path="/quiz" component={ Quiz }/>
+        <Route path="/auth" component={ Auth }/>
+        <Route path="/log-out" component={ LogOut }/>
+
+        <Route path="/quiz-checkbox" render={() => (
+          <QuizCheckbox
+          />
+        )}/>
+      </Switch>
     );
   }
 }
